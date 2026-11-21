@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src blob: data:; connect-src https://*.supabase.co wss://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ALMEX</title>
+<style>
+:root{color-scheme:dark;--bg:#06020f;--card:#150a2e;--card2:#201045;--line:#3d2578;--v:#9333ff;--v2:#c9a0ff;--g:linear-gradient(110deg,#6d28ff,#a24bff,#e040fb,#4f6bff,#6d28ff);--t:#f4f1ff;--m:#9a8fc0;--up:#8b5cff;font-family:"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--t)}
+body{background:var(--bg)}
+#cv{position:fixed;inset:0;width:100%;height:100%}
+.scr{position:fixed;inset:0;display:none;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.scr.on{display:flex}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+:focus-visible{outline:2px solid var(--v2);outline-offset:2px}
+/* intro */
+#intro{flex-direction:column;align-items:center}
+#intro h1{margin-top:22px;font-size:clamp(34px,7vw,64px);letter-spacing:.22em;font-weight:800;padding-left:.22em;background:linear-gradient(180deg,#fff,#b79bff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px #8b5cff88)}
+#intro p{color:var(--m);margin-top:6px;font-size:15px}
+.coin{position:absolute;top:calc(env(safe-area-inset-top,0px) + 16px);right:18px;width:64px;height:64px;perspective:500px}
+.ci{width:100%;height:100%;position:relative;transform-style:preserve-3d;animation:sp 3.6s linear infinite}
+.cf{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;font-size:34px;font-weight:800;color:#7a4a00;background:radial-gradient(circle at 30% 25%,#ffe59a,#f7931a 55%,#b86400);border:3px solid #ffd27a;box-shadow:0 0 22px #f7931a88;backface-visibility:hidden}
+.cf.b{transform:rotateY(180deg)}
+@keyframes sp{to{transform:rotateY(360deg)}}
+#go{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 34px);left:50%;transform:translateX(-50%);padding:14px 38px;border-radius:99px;background:var(--v);font-weight:700;font-size:17px;box-shadow:0 0 30px #8b5cffaa;opacity:0;pointer-events:none;transition:opacity .8s}
+#go.on{opacity:1;pointer-events:auto}
+/* forms */
+.scr.f{align-items:center;justify-content:center;padding:16px;overflow:auto}
+.box{width:100%;max-width:420px;margin:auto;background:#120a24ee;border:1px solid var(--line);border-radius:22px;padding:28px 24px;backdrop-filter:blur(8px)}
+.box h2{font-size:24px;margin-bottom:6px}
+.box .s{color:var(--m);font-size:14px;margin-bottom:20px}
+.logo{font-weight:800;letter-spacing:.2em;color:var(--v2);margin-bottom:14px}
+.m,.p{display:flex;align-items:center;gap:12px;width:100%;padding:14px 16px;border-radius:14px;background:var(--card2);border:1px solid var(--line);margin-bottom:10px;font-weight:600}
+.m:hover{border-color:var(--v)}
+.m b{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#111;font-size:14px}
+.m i{font-style:normal;font-size:20px;width:26px;text-align:center}
+.in{width:100%;padding:13px 14px;border-radius:12px;background:#0b0618;border:1px solid var(--line);margin-bottom:10px}
+.in:focus{border-color:var(--v);outline:0}
+.pri{width:100%;padding:14px;border-radius:14px;background:var(--v);font-weight:700;margin-top:4px}
+.err{color:#ff8fb0;font-size:13px;min-height:18px;margin-bottom:6px}
+.lnk{background:none;color:var(--m);width:100%;padding:10px;font-size:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{padding:8px 14px;border-radius:99px;background:var(--card2);border:1px solid var(--line);font-size:14px}
+.chip.on{background:var(--v);border-color:var(--v)}
+[hidden]{display:none!important}
+/* app */
+#app.on{display:grid;grid-template-columns:230px 1fr;background:rgba(6,2,15,.5)}
+.side{border-right:1px solid var(--line);padding:22px 14px;display:flex;flex-direction:column;gap:6px}
+.side .logo{padding:0 12px;font-size:20px;margin-bottom:18px}
+.nb{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;background:none;color:var(--m);font-size:16px;font-weight:600;text-align:left}
+.nb.on,.nb:hover{background:var(--card2);color:var(--t)}
+.nb.on{box-shadow:inset 3px 0 var(--v)}
+.bnav{display:none}
+#main{overflow:auto;padding:22px 18px 40px}
+.w{max-width:660px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:12px;align-items:center}
+.av{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;background:linear-gradient(135deg,#8b5cff,#3b1a8c)}
+.av.big{width:84px;height:84px;font-size:32px}
+.u{font-weight:700}.mu{color:var(--m);font-size:13px}
+.pt{margin:12px 0;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.md{width:100%;max-height:420px;border-radius:12px;object-fit:cover;background:linear-gradient(135deg,#2b1166,#0e0620);display:grid;place-items:center;min-height:180px;color:var(--v2)}
+.ac{display:flex;gap:10px;margin-top:12px}
+.ac button{background:var(--card2);padding:8px 14px;border-radius:99px;color:var(--m);font-size:14px}
+.ac button.on{color:#ff7aa8}
+textarea.in{resize:none;min-height:70px}
+.fl{padding:9px 14px;border-radius:99px;background:var(--card2);font-size:14px;cursor:pointer;color:var(--m)}
+.sm{padding:9px 18px;border-radius:99px;background:var(--v);font-weight:700;font-size:14px}
+.sm.g{background:var(--card2);color:var(--m)}
+.cw{display:grid;grid-template-columns:300px 1fr;gap:14px;height:calc(100vh - 80px);max-width:960px;margin:auto}
+.cl,.cb{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:auto}
+.ci2{display:flex;gap:12px;align-items:center;padding:14px;cursor:pointer;border-bottom:1px solid var(--line)}
+.ci2:hover,.ci2.on{background:var(--card2)}
+.cb{display:flex;flex-direction:column}
+.ch{padding:14px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.ms{flex:1;overflow:auto;padding:14px;display:flex;flex-direction:column;gap:8px}
+.bb{max-width:75%;padding:10px 14px;border-radius:16px;background:var(--card2);line-height:1.4;word-break:break-word}
+.bb.me{align-self:flex-end;background:var(--v)}
+.cs{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line)}
+.cs .in{margin:0}
+.bk{display:none;background:none;font-size:22px}
+.st{display:flex;gap:26px;margin-top:14px}.st b{display:block;font-size:20px}
+@media(max-width:799px){
+#app.on{grid-template-columns:1fr;grid-template-rows:1fr auto}
+.side{display:none}
+.bnav{display:flex;border-top:1px solid var(--line);background:#0d0720}
+.bnav .nb{flex:1;flex-direction:column;gap:2px;padding:9px 4px;font-size:12px;border-radius:0;justify-content:center;align-items:center}
+.bnav .nb.on{box-shadow:inset 0 3px var(--v);background:none}
+.cw{grid-template-columns:1fr;height:calc(100vh - 160px)}
+.cw.o .cl{display:none}.cw:not(.o) .cb{display:none}
+.bk{display:block}
+}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tabs button{flex:1;padding:10px;border-radius:12px;background:var(--card2);color:var(--m);font-weight:600}.tabs button.on{background:var(--v);color:var(--t)}
+.m.off{opacity:.55}
+.av{overflow:hidden}.av img{width:100%;height:100%;object-fit:cover}
+.g2,.g3{display:grid;gap:10px;margin-bottom:10px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g2 .in,.g3 .in{margin-bottom:0}
+.seg{display:flex;gap:8px;margin-bottom:10px}.seg button{flex:1;padding:11px;border-radius:12px;background:var(--card2);font-weight:700;color:var(--m)}.seg .L.on{background:#16c784;color:#04170f}.seg .S.on{background:#ea3943;color:#fff}
+.pos{color:#16c784}.neg{color:#ea3943}
+.tg{padding:2px 8px;border-radius:8px;font-size:12px;font-weight:700}.tg.L{background:#16c78433;color:#16c784}.tg.S{background:#ea394333;color:#ea3943}
+body::before{content:"";position:fixed;inset:-20%;background:radial-gradient(40% 35% at 20% 30%,#6d28ff77,transparent 70%),radial-gradient(35% 30% at 80% 18%,#e040fb55,transparent 70%),radial-gradient(45% 40% at 62% 85%,#3b52ff66,transparent 70%),radial-gradient(30% 30% at 10% 90%,#00c2ff33,transparent 70%);will-change:transform;animation:au 30s ease-in-out infinite alternate}
+@keyframes au{0%{transform:translate(0,0) scale(1)}100%{transform:translate(4%,-3%) scale(1.08)}}
+@keyframes sh{to{background-position:-300% 0}}
+.pri,.sm:not(.g),#go,.chip.on,.tabs button.on,.bb.me{background-image:var(--g);background-size:300% 100%}#go{animation:sh 9s linear infinite}
+#intro h1{background-image:linear-gradient(90deg,#fff,#c9a0ff,#ff7ae6,#7aa2ff,#fff);background-size:300% 100%;animation:sh 7s linear infinite}
+.av{background:linear-gradient(135deg,#a24bff,#4f3bff,#e040fb)}
+@keyframes sh2{50%{background-position:100% 100%}}
+.box{box-shadow:0 0 70px #9333ff33}.card{box-shadow:0 8px 30px #0006}
+.ic{width:22px;height:22px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}.ic.s{width:16px;height:16px}
+.nb span{display:grid}.nb .ic{opacity:.65}.nb.on .ic,.nb:hover .ic{opacity:1;filter:drop-shadow(0 0 6px #c9a0ff)}
+.nb.on{box-shadow:inset 3px 0 #c9a0ff,0 0 18px #9333ff44}
+.fl{display:inline-flex;gap:8px;align-items:center}div.md{display:flex;gap:10px;align-items:center;justify-content:center}
+.tk{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:34px;z-index:50;overflow:hidden;display:flex;align-items:center;background:rgba(10,4,24,.82);border-bottom:1px solid var(--line);backdrop-filter:blur(8px);font-size:13px;font-weight:600;white-space:nowrap}
+.tkt{display:flex;width:max-content;animation:tk 45s linear infinite}.tk:hover .tkt{animation-play-state:paused}
+@keyframes tk{to{transform:translateX(-50%)}}
+.ti{padding-right:30px}.ti b{margin-right:4px}.ti i{font-style:normal}
+@property --a{syntax:'<angle>';initial-value:0deg;inherits:false}
+@keyframes rot{to{--a:360deg}}
+@keyframes in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes hue{to{background-position:100% 100%}}
+@keyframes draw{0%{stroke-dashoffset:300}60%,100%{stroke-dashoffset:0}}
+.box,.card,.hero{position:relative}
+.box::after,.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:conic-gradient(from var(--a),transparent 0 55%,#c9a0ff,#e040fb,#00c2ff,transparent);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rot 6s linear infinite;pointer-events:none;opacity:.75}
+.card{background:linear-gradient(160deg,#1c0e3af2,#0f0722f2);animation:in .5s cubic-bezier(.2,.8,.2,1) backwards;transition:transform .25s,box-shadow .25s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 40px #9333ff33}
+.w>:nth-child(2){animation-delay:.07s}.w>:nth-child(3){animation-delay:.14s}.w>:nth-child(4){animation-delay:.21s}.w>:nth-child(n+5){animation-delay:.28s}
+.hero{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px;border-radius:24px;margin-bottom:14px;background:linear-gradient(120deg,#4b1fa0cc,#e040fb55,#1b3bff66,#4b1fa0cc);background-size:250% 250%;animation:in .5s backwards;overflow:hidden}
+.hero h2{font-size:30px;margin:2px 0 6px;text-shadow:0 0 24px #e040fb}
+.spark{width:150px;flex:none}.spark path{fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:300;animation:draw 2.5s ease-out forwards}
+.sk{height:110px;background-image:linear-gradient(90deg,#1a0d38,#34197a,#1a0d38);background-size:300% 100%;animation:sh 1.6s linear infinite}
+.logo{background-image:linear-gradient(90deg,#fff,#c9a0ff,#e040fb,#fff);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
+.pri,.sm{transition:transform .15s,box-shadow .25s}.pri:hover,.sm:hover{box-shadow:0 0 28px #9333ffaa}.pri:active,.sm:active{transform:scale(.97)}
+.av.big{box-shadow:0 0 0 3px #0008,0 0 0 5px #c9a0ff,0 0 30px #9333ff}
+.cw{animation:in .5s backwards}
+.tabs button.on{box-shadow:0 0 22px #9333ff77}
+.pwrap{position:relative;margin-bottom:10px}.pwrap .in{margin-bottom:0;padding-right:48px}.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;padding:8px;line-height:0}.eye .ic{opacity:.75}.eye:hover .ic{opacity:1}
+.bb .tk2{display:block;text-align:right;font-size:11px;opacity:.75;margin-top:2px}.tk2.rd{color:#7cf9ff;opacity:1}
+.chimg{max-width:240px;width:100%;border-radius:12px;display:block;margin-bottom:6px}.bb audio{max-width:100%;height:38px;display:block}.sm.rec{background:#ea3943;background-image:none}.cs{align-items:center}.cs .fl{padding:9px 12px;flex:none}.cs .sm{flex:none}
+.mo{position:fixed;inset:0;z-index:100;background:#000a;backdrop-filter:blur(6px);display:grid;place-items:center;padding:16px;animation:in .25s}
+.mb{width:100%;max-width:380px;background:#150a2e;border:1px solid var(--line);border-radius:20px;padding:20px;line-height:1.4}
+.m.dg{color:#ff8fb0;border-color:#ea394366}
+.cmw{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+.cmt{padding:8px 0;border-bottom:1px solid #ffffff10;word-break:break-word}.cmt .lk{background:none;color:var(--m);font-size:12px;padding:2px 0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}.tk{overflow-x:auto}}
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<section id="intro" class="scr on">
+  <h1>ALMEX</h1>
+  <p>Соцсеть трейдеров</p>
+  <div class="coin"><div class="ci"><div class="cf">₿</div><div class="cf b">₿</div></div></div>
+  <button id="go">Войти</button>
+</section>
+
+<section id="auth" class="scr f">
+  <div class="box">
+    <div class="logo">ALMEX</div>
+    <h2>Вход в аккаунт</h2>
+    <p class="s">Вход по почте и паролю. Аккаунты хранятся на защищённом сервере.</p>
+    <div class="tabs"><button id="tL" class="on">Вход</button><button id="tR">Регистрация</button></div>
+    <input class="in" id="id" placeholder="Почта" autocomplete="email">
+    <div class="pwrap" id="w1"><input class="in" id="pw" type="password" placeholder="Пароль" autocomplete="current-password"><button type="button" class="eye" data-t="pw" aria-label="Показать пароль"></button></div>
+    <div class="pwrap" id="w2" hidden><input class="in" id="pw2" type="password" placeholder="Повтори пароль" autocomplete="new-password"><button type="button" class="eye" data-t="pw2" aria-label="Показать пароль"></button></div>
+    <div class="mu" id="hint" hidden style="margin-bottom:8px">Пароль: от 8 символов, буквы и цифры.</div>
+    <div class="err" id="err"></div>
+    <button class="pri" id="cont">Войти</button>
+  </div>
+</section>
+
+<section id="setup" class="scr f">
+  <div class="box">
+    <div class="logo">ALMEX</div>
+    <h2>Создай профиль</h2>
+    <p class="s">Так тебя увидят другие трейдеры.</p>
+    <input class="in" id="nm" placeholder="Имя" maxlength="30">
+    <input class="in" id="un" placeholder="Никнейм, например alex_trade" maxlength="20">
+    <input class="in" id="bio" placeholder="О себе в одной строке" maxlength="90">
+    <div class="mu" style="margin-bottom:8px">Стиль торговли</div>
+    <div class="chips" id="chips"></div>
+    <div class="err" id="err2"></div>
+    <button class="pri" id="mk">Создать аккаунт</button>
+  </div>
+</section>
+
+<section id="app" class="scr">
+  <aside class="side"><div class="logo">ALMEX</div><div id="sn"></div></aside>
+  <main id="main"></main>
+  <nav class="bnav" id="bn"></nav>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function show(id){$$('.scr').forEach(s=>s.classList.toggle('on',s.id===id));introOn=id==='intro'}
+let introOn=true;
+
+/* ---------- фон и 3D-свечи ---------- */
+const cv=$('#cv'),c=cv.getContext('2d');let W,H;
+function rs(){const d=Math.min(devicePixelRatio||1,1.5);W=innerWidth;H=innerHeight;cv.width=W*d;cv.height=H*d;c.setTransform(d,0,0,d,0,0)}
+rs();addEventListener('resize',rs);
+const rnd=i=>{const x=Math.sin(i*127.1+11)*43758.5453;return x-Math.floor(x)};
+const stars=Array.from({length:70},(_,i)=>({x:rnd(i),y:rnd(i+300),r:rnd(i+600)*1.4+.3,p:rnd(i+900)*6}));
+const N=15;let raw=[],p=1;
+for(let i=0;i<N;i++){const o=p,cl=o+(rnd(i)-.42)*1.3+.2;raw.push({o,cl,hi:Math.max(o,cl)+rnd(i+50)*.45,lo:Math.max(.2,Math.min(o,cl)-rnd(i+90)*.45)});p=cl}
+const mx=Math.max(...raw.map(r=>r.hi)),mn=Math.min(...raw.map(r=>r.lo));
+raw.forEach(r=>['o','cl','hi','lo'].forEach(k=>r[k]=(r[k]-mn)/(mx-mn)*7.5+.3));
+const FACES=[[2,3,7,6,0,0],[0,1,3,2,0,-1],[4,5,7,6,0,1],[0,2,6,4,-1,0],[1,3,7,5,1,0]];
+let A=.2,TL=.42,S,CX,CY;
+function P(x,y,z){const X=x*Math.cos(A)+z*Math.sin(A),Z=-x*Math.sin(A)+z*Math.cos(A);
+const Y=y*Math.cos(TL)+Z*Math.sin(TL),D=Z*Math.cos(TL)-y*Math.sin(TL),k=14/(14+D);return[CX+X*S*k,CY-Y*S*k,D]}
+function box(b){const co=Math.cos(b.a),si=Math.sin(b.a),v=[];
+for(let i=0;i<8;i++){const lx=i&1?b.w:-b.w,lz=i&4?b.w:-b.w;v.push(P(b.x+lx*co+lz*si,i&2?b.y1:b.y0,-lx*si+lz*co))}
+const fs=FACES.map(f=>({f,z:(v[f[0]][2]+v[f[1]][2]+v[f[2]][2]+v[f[3]][2])/4})).sort((a,b)=>b.z-a.z);
+for(const{f}of fs){const nx=f[4]*co+f[5]*si,nz=-f[4]*si+f[5]*co,sh=(f[4]||f[5])?Math.max(0,Math.min(.6,.3+.3*nz+.2*nx)):0;
+c.beginPath();f.slice(0,4).forEach((i,j)=>j?c.lineTo(v[i][0],v[i][1]):c.moveTo(v[i][0],v[i][1]));c.closePath();
+c.fillStyle=b.c;c.fill();if(sh){c.fillStyle='rgba(0,0,0,'+sh+')';c.fill()}c.strokeStyle='rgba(255,255,255,.2)';c.lineWidth=1;c.stroke()}}
+const ease=x=>1-Math.pow(1-x,3),T0=performance.now();let ready=false;
+function candles(t){S=Math.min(W*.92,H*.78)/17;CX=W/2;CY=H*.76;const L=[];
+raw.forEach((r,i)=>{const g=ease(Math.max(0,Math.min(1,(t-.4-i*.22)/1.1)));if(g<=0)return;
+const col=r.cl>=r.o?'#16c784':'#ea3943',x=(i-(N-1)/2)*1.05,a=t*.9+i*.8,y0=Math.min(r.o,r.cl)*g,y1=Math.max(Math.max(r.o,r.cl)*g,y0+.15),z=P(x,(y0+y1)/2,0)[2];
+L.push({x,y0:r.lo*g,y1:r.hi*g,w:.06,c:col,a,z:z+.001});L.push({x,y0,y1,w:.34,c:col,a,z})});
+L.sort((a,b)=>b.z-a.z).forEach(box)}
+let fc=0;
+function frame(now){if(!introOn&&(fc++%3)){requestAnimationFrame(frame);return}const t=(now-T0)/1000;c.clearRect(0,0,W,H);
+for(const s of stars){c.globalAlpha=.25+.75*Math.abs(Math.sin(t*.8+s.p));c.fillStyle='#d9ccff';c.beginPath();c.arc(s.x*W,s.y*H,s.r,0,6.3);c.fill()}
+c.globalAlpha=1;if(introOn){candles(t);if(!ready&&t>3.2){ready=true;$('#go').classList.add('on')}}
+requestAnimationFrame(frame)}
+requestAnimationFrame(frame);
+
+/* ---------- сервер (Supabase) ---------- */
+const CFG={url:'https://mhuaigxjdpvakjedxbfm.supabase.co',key:'sb_publishable_1ny52FsusokqYYmrKmDOoA_2XPx9aYK'};
+const ON=/^https:\/\//.test(CFG.url)&&window.supabase;
+const sb=ON?supabase.createClient(CFG.url,CFG.key):null;
+let me=null,uid=null,follow=new Set(),posts=[],feedMode='all',people=[],friends=[],cur=null,msgs=[],jr=[],pend=null,jdir='L',tab='feed',sel=new Set(),poll=null,followers=0,mode='L',fails=0,lockUntil=0,blocks=[],openC=null,cmts=[];
+const TABS=[['feed','home','Главная'],['jr','jr','Журнал'],['chat','chat','Чаты'],['fr','fr','Люди'],['me','me','Профиль']];
+const STY=['Скальпинг','Дейтрейдинг','Свинг','Инвестор','Крипто','Форекс'],EX=['Сделка открыта','Тейк-профит','Стоп-лосс','Безубыток','Закрыл вручную'];
+const ICO={mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',eye:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',eyeoff:'<path d="M3 3l18 18"/><path d="M10.6 6.2A9.7 9.7 0 0 1 12 6c6 0 10 6 10 6a17 17 0 0 1-3.2 3.9M6.6 7.6A16.6 16.6 0 0 0 2 12s4 7 10 7a9.6 9.6 0 0 0 4-.9"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',home:'<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/>',jr:'<path d="M5 3h12a2 2 0 0 1 2 2v16H7a2 2 0 0 1-2-2z"/><path d="M9 8h6M9 12h6"/>',chat:'<path d="M4 5h16v11H9l-5 4z"/>',fr:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.5 2.7-6 6-6s6 2.5 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M17 14c2.5 0 4.5 2 4.5 5"/>',me:'<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',img:'<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M4 18l5-5 4 4 3-3 4 4"/>',lock:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',chart:'<path d="M3 17l5-6 4 3 8-9"/><path d="M15 5h5v5"/>'};
+const ic=(n,c='')=>`<svg class="ic ${c}" viewBox="0 0 24 24">${ICO[n]}</svg>`;
+const fmt=n=>(n>0?'+':'')+Math.round(n*100)/100;
+const ago=d=>{const s=(Date.now()-new Date(d))/1000;return s<60?'сейчас':s<3600?Math.floor(s/60)+' мин':s<86400?Math.floor(s/3600)+' ч':Math.floor(s/86400)+' дн'};
+const resize=(f,m,q)=>new Promise(r=>{const im=new Image();im.onload=()=>{const k=Math.min(1,m/Math.max(im.width,im.height)),z=document.createElement('canvas');z.width=im.width*k;z.height=im.height*k;z.getContext('2d').drawImage(im,0,0,z.width,z.height);URL.revokeObjectURL(im.src);r(z.toDataURL('image/jpeg',q))};im.src=URL.createObjectURL(f)});
+const okImg=s=>typeof s==='string'&&s.startsWith('data:image/');
+let rec=null,busy=false,feedErr='';
+const bub=x=>`<div class="bb ${x.from_id===uid?'me':''}" data-id="${x.id}">${okImg(x.img)?`<img class="chimg" src="${x.img}" alt="">`:''}${typeof x.audio==='string'&&x.audio.startsWith('data:audio/')?`<audio controls src="${x.audio}"></audio>`:''}${x.body?esc(x.body):''}${x.from_id===uid?`<span class="tk2 ${x.read_at?'rd':''}">${x.read_at?'✓✓':'✓'}</span>`:''}</div>`;
+async function sendMsg(o){if(cur==null||!friends[cur])return;const{error}=await sb.from('messages').insert({from_id:uid,to_id:friends[cur].id,body:'',img:'',audio:'',...o});
+if(error)await modal('Не удалось отправить: '+esc(error.message),[]);loadMsgs()}
+function modal(title,btns,inp){return new Promise(res=>{const o=document.createElement('div');o.className='mo';
+o.innerHTML=`<div class="mb" role="dialog"><div class="u" style="margin-bottom:12px">${title}</div>${inp?`<input class="in" id="mi" placeholder="${inp}">`:''}${btns.map((b,i)=>`<button class="m${b[2]?' dg':''}" data-i="${i}">${b[0]}</button>`).join('')}<button class="lnk" data-i="x">${btns.length?'Отмена':'Ок'}</button></div>`;
+o.onclick=e=>{const i=e.target.dataset.i;if(e.target===o||i==='x'){o.remove();res(null)}else if(i!=null){const t=o.querySelector('#mi')?.value||'';o.remove();res({v:btns[i][1],t})}};document.body.appendChild(o)})}
+async function report(kind,id,target){const r=await modal('Причина жалобы',['Спам','Мошенничество','Оскорбления','Неприемлемый контент','Другое'].map(x=>[x,x]));if(!r)return;
+const{error}=await sb.from('reports').insert({reporter:uid,kind,target_id:String(id),target_user:target,reason:r.v});
+await modal(error?'Не удалось отправить жалобу':'Спасибо, жалоба отправлена. Мы проверим.',[])}
+async function block(id,name){const r=await modal('Заблокировать '+esc(name||'пользователя')+'? Вы перестанете видеть друг друга.',[['Заблокировать','b',1]]);if(!r)return;
+await sb.from('blocks').insert({blocker:uid,blocked:id});await sb.from('follows').delete().eq('follower',uid).eq('following',id);follow.delete(id);
+if(tab==='fr')loadPeople();else go(tab)}
+const av=(n,c='',ph='')=>`<div class="av ${c}">${okImg(ph)?`<img src="${ph}" alt="">`:esc((n||'?')[0]).toUpperCase()}</div>`;
+
+/* ---------- вход ---------- */
+function setMode(m){mode=m;$('#tL').classList.toggle('on',m==='L');$('#tR').classList.toggle('on',m==='R');$('#w2').hidden=$('#hint').hidden=m==='L';
+$('#cont').textContent=m==='L'?'Войти':'Создать аккаунт';$('#pw').autocomplete=m==='L'?'current-password':'new-password';$('#err').textContent=''}
+$$('.eye').forEach(b=>{b.innerHTML=ic('eye');b.onclick=()=>{const i=$('#'+b.dataset.t),on=i.type==='password';i.type=on?'text':'password';b.innerHTML=ic(on?'eyeoff':'eye');b.setAttribute('aria-label',on?'Скрыть пароль':'Показать пароль')}});
+$('#tL').onclick=()=>setMode('L');$('#tR').onclick=()=>setMode('R');
+$('#cont').onclick=async()=>{const E=t=>$('#err').textContent=t;E('');
+if(!sb)return E('Сервер не подключён: вставь ключи Supabase в index.html.');
+const email=$('#id').value.trim().toLowerCase(),pw=$('#pw').value;
+if(Date.now()<lockUntil)return E('Слишком много попыток. Подожди 30 секунд.');
+if(!/^\S+@\S+\.\S+$/.test(email))return E('Введи корректную почту');
+$('#cont').disabled=true;
+try{let r;
+if(mode==='R'){if(pw.length<8||!/[a-zA-Zа-яА-Я]/.test(pw)||!/\d/.test(pw))return E('Пароль: от 8 символов, буквы и цифры');
+if(pw!==$('#pw2').value)return E('Пароли не совпадают');
+r=await sb.auth.signUp({email,password:pw});if(r.error)return E(r.error.message);
+if(!r.data.session)return E('Мы отправили письмо. Подтверди почту и войди.')}
+else{r=await sb.auth.signInWithPassword({email,password:pw});if(r.error){if(++fails>=5){lockUntil=Date.now()+30000;fails=0}return E('Неверная почта или пароль')}fails=0}
+uid=r.data.session.user.id;$('#pw').value=$('#pw2').value='';await enter()}
+catch(e){E('Нет связи с сервером. Проверь интернет.')}finally{$('#cont').disabled=false}};
+async function enter(){const{data,error:pe}=await sb.from('profiles').select('*').eq('id',uid).maybeSingle();
+if(pe){show('auth');$('#err').textContent='Ошибка загрузки профиля: '+pe.message;return}
+if(!data)return show('setup');me=data;const f=await sb.from('follows').select('following').eq('follower',uid);follow=new Set((f.data||[]).map(r=>r.following));show('app');go('feed')}
+$('#go').onclick=()=>uid?enter():show('auth');
+(async()=>{if(!sb)return;const{data}=await sb.auth.getSession();if(data.session)uid=data.session.user.id})();
+$('#chips').innerHTML=STY.map(s=>`<button class="chip" type="button">${s}</button>`).join('');
+$$('#chips .chip').forEach(b=>b.onclick=()=>{const k=b.textContent;sel.has(k)?sel.delete(k):sel.add(k);b.classList.toggle('on')});
+$('#mk').onclick=async()=>{const n=$('#nm').value.trim(),u=$('#un').value.trim().toLowerCase(),E=t=>$('#err2').textContent=t;
+if(!n)return E('Введи имя');if(!/^[a-z0-9_]{3,20}$/.test(u))return E('Никнейм: 3–20 символов, латиница, цифры и _');
+const{error}=await sb.from('profiles').insert({id:uid,username:u,name:n,bio:$('#bio').value.trim(),styles:[...sel]});
+if(error)return E(error.code==='23505'?'Этот никнейм занят':'Не удалось сохранить профиль: '+(error.message||''));await enter()};
+
+/* ---------- данные ---------- */
+async function loadFeed(){let q=sb.from('posts').select('id,body,img,created,user_id,profiles(username,name,avatar),likes(count),comments(count)').order('created',{ascending:false}).limit(50);
+if(feedMode==='f')q=q.in('user_id',[...follow,uid]);const{data,error}=await q;feedErr=error?error.message:'';posts=data||[];
+if(posts.length){const l=await sb.from('likes').select('post_id').eq('user_id',uid).in('post_id',posts.map(p=>p.id));const s=new Set((l.data||[]).map(r=>r.post_id));
+posts.forEach(p=>{p.liked=s.has(p.id);p.lc=p.likes?.[0]?.count||0;p.cc=p.comments?.[0]?.count||0})}}
+async function loadBlocks(){const{data}=await sb.rpc('my_blocks');blocks=data||[]}
+async function loadCmts(id){const{data}=await sb.from('comments').select('id,body,created,user_id,profiles(username,name,avatar)').eq('post_id',id).order('created').limit(100);cmts=data||[]}
+async function loadTrades(){const{data}=await sb.from('trades').select('id,data').order('created',{ascending:false});jr=(data||[]).map(r=>({...r.data,id:r.id}))}
+async function loadFriends(){const ids=[...follow];if(!ids.length){friends=[];return}const{data}=await sb.from('profiles').select('id,username,name,avatar').in('id',ids);friends=data||[]}
+async function loadStats(){const{count}=await sb.from('follows').select('*',{count:'exact',head:true}).eq('following',uid);followers=count||0;await loadBlocks()}
+async function loadPeople(){if(!$('#plist'))return;let q=sb.from('profiles').select('id,username,name,bio,avatar').neq('id',uid).order('created',{ascending:false}).limit(30);
+const t=($('#fs')?.value||'').trim().replace(/[%,()*@]/g,'');if(t)q=q.or(`username.ilike.%${t}%,name.ilike.%${t}%`);
+const{data}=await q;const el=$('#plist');if(!el)return;people=data||[];
+el.innerHTML=people.length?people.map(p=>`<div class="card row">${av(p.name,'',p.avatar)}<div style="flex:1;min-width:0"><div class="u">${esc(p.name)}</div><div class="mu">@${esc(p.username)}${p.bio?' · '+esc(p.bio):''}</div></div><button class="sm ${follow.has(p.id)?'g':''}" data-a="fol" data-i="${p.id}">${follow.has(p.id)?'Вы подписаны':'Подписаться'}</button><button class="sm g" data-a="pmenu" data-i="${p.id}" aria-label="Ещё">⋯</button></div>`).join(''):'<div class="card mu">Никого не нашли. Позови друга в ALMEX!</div>'}
+async function loadMsgs(){if(busy||cur==null||!friends[cur])return;busy=true;try{const p=friends[cur].id,first=!msgs.length;
+let q=sb.from('messages').select('id,from_id,body,img,audio,created,read_at').or(`and(from_id.eq.${uid},to_id.eq.${p}),and(from_id.eq.${p},to_id.eq.${uid})`);
+q=first?q.order('id',{ascending:false}).limit(40):q.gt('id',msgs[msgs.length-1].id).order('id');
+const{data}=await q;const m=$('#ms');if(!data||!m||cur==null||friends[cur].id!==p)return;
+const rows=first?data.reverse():data;
+if(rows.length){msgs=msgs.concat(rows);m.insertAdjacentHTML('beforeend',rows.map(bub).join(''));m.scrollTop=m.scrollHeight}
+if(msgs.some(x=>x.from_id===p&&!x.read_at)){const now=new Date().toISOString();
+const r=await sb.from('messages').update({read_at:now}).eq('to_id',uid).eq('from_id',p).is('read_at',null);
+if(!r.error)msgs.forEach(x=>{if(x.from_id===p)x.read_at=x.read_at||now})}
+const wait=msgs.filter(x=>x.from_id===uid&&!x.read_at).map(x=>x.id);
+if(wait.length){const r=await sb.from('messages').select('id,read_at').in('id',wait).not('read_at','is',null);
+(r.data||[]).forEach(y=>{const o=msgs.find(z=>z.id===y.id);if(o)o.read_at=y.read_at;const el=document.querySelector(`[data-id="${y.id}"] .tk2`);if(el){el.textContent='✓✓';el.classList.add('rd')}})}
+}finally{busy=false}}
+
+/* ---------- приложение ---------- */
+function nav(){const h=TABS.map(t=>`<button class="nb ${t[0]===tab?'on':''}" data-t="${t[0]}"><span>${ic(t[1])}</span>${t[2]}</button>`).join('');
+$('#sn').innerHTML=h;$('#bn').innerHTML=h;$$('.nb').forEach(b=>b.onclick=()=>go(b.dataset.t))}
+async function go(t){tab=t;cur=null;openC=null;clearInterval(poll);nav();$('#main').innerHTML='<div class="w"><div class="card sk"></div><div class="card sk"></div></div>';
+try{if(t==='feed')await loadFeed();else if(t==='jr')await loadTrades();else if(t==='me')await loadStats();else if(t==='chat')await loadFriends()}catch(e){}
+if(tab!==t)return;render();if(t==='fr')loadPeople()}
+const V={
+feed(){return `<div class="w"><div class="hero"><div><div class="mu">Добро пожаловать</div><h2>${esc(me.name)}</h2><div class="mu">Делись идеями, записывай сделки и расти вместе с трейдерами.</div></div><svg class="spark" viewBox="0 0 200 60"><path d="M0 52L25 40L45 46L70 28L95 34L125 14L150 22L200 4"/></svg></div>
+<div class="card"><div class="row" style="align-items:flex-start">${av(me.name,'',me.avatar)}<div style="flex:1"><textarea class="in" id="ptxt" maxlength="1000" placeholder="Что на рынке, ${esc(me.name)}?"></textarea>
+<div class="row" style="justify-content:space-between"><label class="fl">${ic('img','s')} Фото<input type="file" id="pf" accept="image/*" hidden></label><span class="mu" id="pn"></span><button class="sm" id="pbtn" data-a="post">Опубликовать</button></div></div></div></div>
+<div class="tabs"><button class="${feedMode==='all'?'on':''}" data-a="fm" data-i="all">Все</button><button class="${feedMode==='f'?'on':''}" data-a="fm" data-i="f">Подписки</button></div>`+
+(feedErr?`<div class="card" style="color:#ff8fb0">Ошибка ленты: ${esc(feedErr)}</div>`:'')+(posts.length?posts.map(p=>{const a=p.profiles||{};return `<article class="card"><div class="row">${av(a.name,'',a.avatar)}<div style="flex:1"><div class="u">${esc(a.name||'?')}</div><div class="mu">@${esc(a.username||'')} · ${ago(p.created)}</div></div><button class="sm g" data-a="menu" data-i="${p.id}" aria-label="Ещё">⋯</button></div>
+${p.body?`<div class="pt">${esc(p.body)}</div>`:''}${okImg(p.img)?`<img class="md" src="${p.img}" alt="">`:''}
+<div class="ac"><button class="${p.liked?'on':''}" data-a="like" data-i="${p.id}">${p.liked?'♥':'♡'} ${p.lc}</button><button data-a="cm" data-i="${p.id}">${ic('chat','s')} ${p.cc}</button></div>
+${openC===p.id?`<div class="cmw">${cmts.map(c=>{const b=c.profiles||{};return `<div class="cmt"><b>${esc(b.name||'?')}</b> <span class="mu">${ago(c.created)}</span><div>${esc(c.body)}</div><button class="lk" data-a="cmenu" data-i="${c.id}">${c.user_id===uid?'Удалить':'Пожаловаться'}</button></div>`}).join('')||'<div class="mu">Комментариев пока нет</div>'}<div class="cs"><input class="in" id="cmi" maxlength="500" placeholder="Комментарий" autocomplete="off"><button class="sm" data-a="csend" data-i="${p.id}">Отправить</button></div></div>`:''}</article>`}).join(''):'<div class="card mu" style="text-align:center;padding:30px">Пока тихо. Напиши первый пост и позови друга в ALMEX.</div>')+`</div>`},
+jr(){const cl=jr.filter(t=>t.res!==''),win=cl.filter(t=>t.res>0).length,sum=cl.reduce((a,t)=>a+t.res,0);
+return `<div class="w"><div class="mu" style="margin-bottom:12px">${ic('lock','s')} Журнал виден только тебе</div>
+<div class="card"><div class="u" style="margin-bottom:12px">Новая сделка</div>
+<div class="g2"><input class="in" id="jsym" placeholder="Инструмент, например BTCUSDT" maxlength="14"><select class="in" id="jtf">${['M5','M15','H1','H4','D1'].map(x=>`<option>${x}</option>`).join('')}</select></div>
+<div class="seg"><button class="L ${jdir==='L'?'on':''}" data-a="dir" data-i="L">Лонг</button><button class="S ${jdir==='S'?'on':''}" data-a="dir" data-i="S">Шорт</button></div>
+<div class="g3"><input class="in" id="jen" type="number" step="any" placeholder="Вход"><input class="in" id="jsl" type="number" step="any" placeholder="Стоп-лосс"><input class="in" id="jtp" type="number" step="any" placeholder="Тейк-профит"></div>
+<div class="g2"><input class="in" id="jrk" type="number" step="any" placeholder="Риск, % депозита"><input class="in" id="jrs" type="number" step="any" placeholder="Результат, %"></div>
+<textarea class="in" id="jwhy" placeholder="Почему зашёл: сетап, уровень, подтверждение"></textarea>
+<select class="in" id="jex">${EX.map(x=>`<option>${x}</option>`).join('')}</select>
+<textarea class="in" id="jnt" placeholder="Причина выхода, эмоции, что улучшить"></textarea>
+<div class="err" id="jerr"></div><button class="pri" data-a="jadd">Записать сделку</button></div>
+<div class="card row" style="justify-content:space-around;text-align:center"><div><b style="font-size:20px">${jr.length}</b><div class="mu">сделок</div></div><div><b style="font-size:20px">${cl.length?Math.round(win/cl.length*100):0}%</b><div class="mu">винрейт</div></div><div><b style="font-size:20px" class="${sum>0?'pos':sum<0?'neg':''}">${fmt(sum)}%</b><div class="mu">итог</div></div></div>`+
+(jr.length?jr.map((t,i)=>{const rr=t.sl!==''&&t.tp!==''&&t.en!==''&&t.en!==t.sl?Math.abs(t.tp-t.en)/Math.abs(t.en-t.sl):0;
+return `<div class="card"><div class="row" style="justify-content:space-between"><div class="u">${esc(t.sym)} <span class="tg ${t.dir}">${t.dir==='L'?'Лонг':'Шорт'}</span> <span class="mu">${t.tf}</span></div><div class="u ${t.res>0?'pos':t.res<0?'neg':''}">${t.res===''?'открыта':fmt(t.res)+'%'}</div></div>
+<div class="mu" style="margin:6px 0">${new Date(t.d).toLocaleDateString('ru')}${t.en!==''?' · вход '+t.en:''}${t.sl!==''?' · стоп '+t.sl:''}${t.tp!==''?' · тейк '+t.tp:''}${t.rk!==''?' · риск '+t.rk+'%':''}${rr?' · R:R 1:'+rr.toFixed(1):''}</div>
+${t.why?`<div class="pt"><b>Вход:</b> ${esc(t.why)}</div>`:''}<div class="pt" style="margin-top:0"><b>Выход:</b> ${esc(t.ex)}${t.nt?' — '+esc(t.nt):''}</div>
+<div class="ac"><button data-a="jdel" data-i="${t.id}">Удалить</button></div></div>`}).join(''):'<div class="card mu">Сделок пока нет. Запиши первую: причину входа, стоп, тейк и итог.</div>')+`</div>`},
+chat(){const ch=cur!=null?friends[cur]:null;
+return `<div class="cw ${ch?'o':''}"><div class="cl">${friends.length?friends.map((x,i)=>`<div class="ci2 ${i===cur?'on':''}" data-a="chat" data-i="${i}">${av(x.name,'',x.avatar)}<div><div class="u">${esc(x.name)}</div><div class="mu">@${esc(x.username)}</div></div></div>`).join(''):'<div class="mu" style="padding:16px;line-height:1.5">Подпишись на людей во вкладке «Люди», и они появятся здесь.</div>'}</div>
+<div class="cb">${ch?`<div class="ch"><button class="bk" data-a="back">←</button>${av(ch.name,'',ch.avatar)}<div class="u">${esc(ch.name)}</div></div><div class="ms" id="ms"></div>
+<div class="cs"><label class="fl" aria-label="Фото">${ic('img','s')}<input type="file" id="cph" accept="image/*" hidden></label><button class="sm g" id="mic" data-a="mic" aria-label="Голосовое сообщение">${ic('mic','s')}</button><input class="in" id="cin" placeholder="Сообщение" autocomplete="off"><button class="sm" data-a="send">Отправить</button></div>`:'<div class="ms" style="place-content:center;text-align:center;color:var(--m)">Выбери чат слева</div>'}</div></div>`},
+fr(){return `<div class="w"><input class="in" id="fs" placeholder="Введи ник, например alex_trade"><div id="plist"><div class="card sk"></div></div></div>`},
+me(){return `<div class="w"><div class="card"><div class="row">${av(me.name,'big',me.avatar)}<div><div class="u" style="font-size:22px">${esc(me.name)}</div><div class="mu">@${esc(me.username)}</div><label class="fl" style="margin-top:8px">${ic('img','s')} Фото профиля<input type="file" id="pph" accept="image/*" hidden></label></div></div>
+<div class="st"><div><b>${followers}</b><span class="mu">подписчиков</span></div><div><b>${follow.size}</b><span class="mu">подписок</span></div></div></div>
+<div class="card"><div class="u" style="margin-bottom:12px">Настройки аккаунта</div><input class="in" id="enm" value="${esc(me.name)}" maxlength="30" placeholder="Имя"><input class="in" id="ebio" value="${esc(me.bio||'')}" maxlength="90" placeholder="О себе">
+<div class="chips" id="ech">${STY.map(s=>`<button class="chip ${(me.styles||[]).includes(s)?'on':''}" data-a="est" data-i="${s}">${s}</button>`).join('')}</div><div class="err" id="eok"></div><button class="pri" data-a="psave">Сохранить</button></div>
+<div class="card"><div class="u" style="margin-bottom:12px">Безопасность</div><button class="m" data-a="pw">Сменить пароль</button><button class="m" data-a="outall">Выйти со всех устройств</button><button class="m dg" data-a="delacc">Удалить аккаунт</button></div>
+<div class="card"><div class="u" style="margin-bottom:12px">Заблокированные</div>${blocks.length?blocks.map(b=>`<div class="row" style="margin-bottom:8px"><div style="flex:1"><div class="u">${esc(b.name)}</div><div class="mu">@${esc(b.username)}</div></div><button class="sm g" data-a="unblock" data-i="${b.id}">Разблокировать</button></div>`).join(''):'<div class="mu">Список пуст</div>'}</div>
+<button class="sm" data-a="invite" style="width:100%;padding:14px;margin-bottom:10px">Позвать друга</button>
+<button class="sm g" data-a="out" style="width:100%;padding:14px">Выйти из аккаунта</button></div>`}};
+function render(){const v=$('#ptxt')?.value;$('#main').innerHTML=V[tab]();if(v)$('#ptxt').value=v;
+if(tab==='chat'&&cur!=null){msgs=[];loadMsgs()}}
+const A_={
+async post(){const x=$('#ptxt').value.trim();if(!x&&!pend)return;$('#pbtn').disabled=true;
+const{error}=await sb.from('posts').insert({user_id:uid,body:x,img:pend||''});if(error){$('#pbtn').disabled=false;$('#pn').textContent='Не удалось опубликовать: '+error.message;return}
+pend=null;await loadFeed();render()},
+async pdel(i){await sb.from('posts').delete().eq('id',i).eq('user_id',uid);await loadFeed();render()},
+async like(i){const p=posts.find(x=>x.id==i);if(!p)return;const r=p.liked?await sb.from('likes').delete().eq('post_id',p.id).eq('user_id',uid):await sb.from('likes').insert({post_id:p.id,user_id:uid});
+if(r.error)return;p.liked=!p.liked;p.lc+=p.liked?1:-1;render()},
+async cm(i){i=+i;if(openC===i){openC=null;render();return}openC=i;cmts=[];await loadCmts(i);render()},
+async csend(i){const x=$('#cmi').value.trim();if(!x)return;const{error}=await sb.from('comments').insert({post_id:+i,user_id:uid,body:x});
+if(error){$('#cmi').value='';$('#cmi').placeholder='Не удалось отправить';return}const p=posts.find(q=>q.id==i);if(p)p.cc++;await loadCmts(+i);render()},
+async cmenu(i){const c=cmts.find(x=>x.id==i);if(!c)return;
+if(c.user_id===uid){const r=await modal('Удалить комментарий?',[['Удалить','d',1]]);if(r){await sb.from('comments').delete().eq('id',c.id);await loadCmts(openC);render()}}
+else await report('comment',c.id,c.user_id)},
+async menu(i){const p=posts.find(x=>x.id==i);if(!p)return;
+if(p.user_id===uid){const r=await modal('Удалить пост?',[['Удалить','d',1]]);if(r)A_.pdel(p.id);return}
+const r=await modal('Что сделать с постом?',[['Пожаловаться','r'],['Заблокировать автора','b',1]]);
+if(r&&r.v==='r')await report('post',p.id,p.user_id);if(r&&r.v==='b')await block(p.user_id,(p.profiles||{}).name)},
+async pmenu(i){const p=people.find(x=>x.id===i);if(!p)return;
+const r=await modal(esc(p.name),[['Пожаловаться на аккаунт','r'],['Заблокировать','b',1]]);
+if(r&&r.v==='r')await report('user',p.id,p.id);if(r&&r.v==='b')await block(p.id,p.name)},
+async unblock(i){await sb.from('blocks').delete().eq('blocker',uid).eq('blocked',i);await loadBlocks();render()},
+async pw(){const r=await modal('Новый пароль',[['Сохранить','s']],'Минимум 8 символов, буквы и цифры');if(!r)return;const p=r.t;
+if(p.length<8||!/[a-zA-Zа-яА-Я]/.test(p)||!/\d/.test(p)){$('#eok').textContent='Пароль слабый: от 8 символов, буквы и цифры';return}
+const{error}=await sb.auth.updateUser({password:p});$('#eok').textContent=error?'Не удалось сменить пароль':'Пароль изменён'},
+async outall(){await sb.auth.signOut({scope:'global'});location.reload()},
+async delacc(){const r=await modal('Удалить аккаунт навсегда? Посты, сообщения и журнал сделок исчезнут. Введи УДАЛИТЬ.',[['Удалить аккаунт','d',1]],'УДАЛИТЬ');
+if(!r||r.t.trim().toUpperCase()!=='УДАЛИТЬ')return;const{error}=await sb.rpc('delete_my_account');
+if(error){$('#eok').textContent='Не удалось удалить аккаунт';return}await sb.auth.signOut();location.reload()},
+fm(i){feedMode=i;go('feed')},
+async fol(i){const on=follow.has(i),r=on?await sb.from('follows').delete().eq('follower',uid).eq('following',i):await sb.from('follows').insert({follower:uid,following:i});
+if(r.error)return;on?follow.delete(i):follow.add(i);loadPeople()},
+chat(i){cur=+i;render();clearInterval(poll);poll=setInterval(loadMsgs,3000)},
+back(){cur=null;clearInterval(poll);render()},
+async send(){const i=$('#cin').value.trim();if(!i||cur==null)return;$('#cin').value='';await sendMsg({body:i})},
+async mic(){if(rec){rec.stop();return}
+try{const st=await navigator.mediaDevices.getUserMedia({audio:true});
+const mt=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(t=>window.MediaRecorder&&MediaRecorder.isTypeSupported(t));
+const r=new MediaRecorder(st,{...(mt?{mimeType:mt}:{}),audioBitsPerSecond:24000}),ch=[],b=$('#mic');let sec=0;
+const tm=setInterval(()=>{sec++;b.textContent=sec+' с ■';if(sec>=60)r.stop()},1000);
+b.classList.add('rec');b.textContent='0 с ■';
+r.ondataavailable=e=>{if(e.data.size)ch.push(e.data)};
+r.onstop=()=>{clearInterval(tm);st.getTracks().forEach(t=>t.stop());rec=null;const x=$('#mic');if(x){x.classList.remove('rec');x.innerHTML=ic('mic','s')}
+if(sec<1)return;const fr=new FileReader();fr.onload=()=>sendMsg({audio:fr.result});fr.readAsDataURL(new Blob(ch,{type:r.mimeType||mt||'audio/webm'}))};
+r.start();rec=r}catch(e){await modal('Нет доступа к микрофону. Разреши его в настройках браузера.',[])}},
+dir(i){jdir=i;$$('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.i===i))},
+async jadd(){const g=id=>$(id).value,n=id=>g(id)===''?'':+g(id),sym=g('#jsym').trim().toUpperCase();
+if(!sym)return $('#jerr').textContent='Укажи инструмент';
+const e={sym,tf:g('#jtf'),dir:jdir,en:n('#jen'),sl:n('#jsl'),tp:n('#jtp'),rk:n('#jrk'),res:n('#jrs'),why:g('#jwhy').trim(),ex:g('#jex'),nt:g('#jnt').trim(),d:Date.now()};
+const{error}=await sb.from('trades').insert({user_id:uid,data:e});if(error)return $('#jerr').textContent='Не удалось сохранить';await loadTrades();render()},
+async jdel(i){await sb.from('trades').delete().eq('id',i);await loadTrades();render()},
+est(i){me.styles=me.styles||[];const k=me.styles.indexOf(i);k<0?me.styles.push(i):me.styles.splice(k,1);$$('#ech .chip').forEach(b=>b.classList.toggle('on',me.styles.includes(b.dataset.i)))},
+async psave(){const n=$('#enm').value.trim(),o=$('#eok');if(!n){o.textContent='Имя не может быть пустым';return}
+me.name=n;me.bio=$('#ebio').value.trim();const{error}=await sb.from('profiles').update({name:me.name,bio:me.bio,styles:me.styles||[]}).eq('id',uid);
+o.textContent=error?'Не удалось сохранить':'Сохранено'},
+invite(){try{navigator.clipboard.writeText(location.href.split('#')[0]);$('#eok').textContent='Ссылка скопирована. Отправь её другу.'}catch(e){$('#eok').textContent=location.href}},
+async out(){await sb.auth.signOut();location.reload()}};
+$('#main').onclick=e=>{const b=e.target.closest('[data-a]');if(b)A_[b.dataset.a](b.dataset.i)};
+$('#main').onchange=async e=>{const t=e.target,f=t.files&&t.files[0];if(!f)return;
+if(t.id==='pf'){pend=await resize(f,900,.72);$('#pn').textContent='Фото добавлено'}
+if(t.id==='cph'){const d=await resize(f,900,.72);t.value='';sendMsg({img:d})}
+if(t.id==='pph'){me.avatar=await resize(f,256,.85);await sb.from('profiles').update({avatar:me.avatar}).eq('id',uid);render()}};
+let dt;$('#main').oninput=e=>{if(e.target.id==='fs'){clearTimeout(dt);dt=setTimeout(loadPeople,300)}};
+$('#main').onkeydown=e=>{if(e.key==='Enter'&&e.target.id==='cin')A_.send();if(e.key==='Enter'&&e.target.id==='cmi')A_.csend(openC)};
+
+</script>
+</body>
+</html>
